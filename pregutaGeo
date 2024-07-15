@@ -10,13 +10,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PreguntaGeografiaa extends JPanel {
+public class PreguntaGeografia extends JPanel {
     private List<Pregunta> preguntas;
     private int indicePreguntaActual = 0;
     private int puntaje = 0;
     private String nombreUsuario;
 
-    public PreguntaGeografiaa(String nombreUsuario) {
+    public PreguntaGeografia(String nombreUsuario) {
         this.nombreUsuario = nombreUsuario;
         cargarPreguntasDesdeBD();
         setLayout(new BorderLayout());
@@ -36,7 +36,7 @@ public class PreguntaGeografiaa extends JPanel {
                 String opcion2 = rs.getString("opcion2");
                 String opcion3 = rs.getString("opcion3");
                 String opcion4 = rs.getString("opcion4");
-                String correcta = rs.getString("respuesta_correcta");
+                int correcta = rs.getInt("respuesta_correcta");
                 preguntas.add(new Pregunta(pregunta, opcion1, opcion2, opcion3, opcion4, correcta));
             }
 
@@ -57,10 +57,10 @@ public class PreguntaGeografiaa extends JPanel {
             JButton opcion3 = new JButton(preguntaActual.getOpcion3());
             JButton opcion4 = new JButton(preguntaActual.getOpcion4());
 
-            opcion1.addActionListener(e -> verificarRespuesta(opcion1.getText(), preguntaActual.getCorrecta()));
-            opcion2.addActionListener(e -> verificarRespuesta(opcion2.getText(), preguntaActual.getCorrecta()));
-            opcion3.addActionListener(e -> verificarRespuesta(opcion3.getText(), preguntaActual.getCorrecta()));
-            opcion4.addActionListener(e -> verificarRespuesta(opcion4.getText(), preguntaActual.getCorrecta()));
+            opcion1.addActionListener(e -> verificarRespuesta(1, preguntaActual.getCorrecta()));
+            opcion2.addActionListener(e -> verificarRespuesta(2, preguntaActual.getCorrecta()));
+            opcion3.addActionListener(e -> verificarRespuesta(3, preguntaActual.getCorrecta()));
+            opcion4.addActionListener(e -> verificarRespuesta(4, preguntaActual.getCorrecta()));
 
             panelPregunta.add(labelPregunta);
             panelPregunta.add(opcion1);
@@ -75,8 +75,8 @@ public class PreguntaGeografiaa extends JPanel {
         }
     }
 
-    private void verificarRespuesta(String respuestaSeleccionada, String respuestaCorrecta) {
-        if (respuestaSeleccionada.equals(respuestaCorrecta)) {
+    private void verificarRespuesta(int respuestaSeleccionada, int respuestaCorrecta) {
+        if (respuestaSeleccionada == respuestaCorrecta) {
             JOptionPane.showMessageDialog(this, "¡Muy bien!");
             puntaje += 10;
             indicePreguntaActual++;
@@ -106,9 +106,10 @@ public class PreguntaGeografiaa extends JPanel {
 
     // Clase para manejar las preguntas
     private static class Pregunta {
-        private String pregunta, opcion1, opcion2, opcion3, opcion4, correcta;
+        private String pregunta, opcion1, opcion2, opcion3, opcion4;
+        private int correcta;
 
-        public Pregunta(String pregunta, String opcion1, String opcion2, String opcion3, String opcion4, String correcta) {
+        public Pregunta(String pregunta, String opcion1, String opcion2, String opcion3, String opcion4, int correcta) {
             this.pregunta = pregunta;
             this.opcion1 = opcion1;
             this.opcion2 = opcion2;
@@ -137,7 +138,7 @@ public class PreguntaGeografiaa extends JPanel {
             return opcion4;
         }
 
-        public String getCorrecta() {
+        public int getCorrecta() {
             return correcta;
         }
     }
